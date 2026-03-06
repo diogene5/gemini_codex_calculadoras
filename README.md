@@ -5,6 +5,7 @@ Colecao em React + Vite para calculadoras educacionais com foco em emergencia pe
 ## Links
 
 - Producao no Netlify: `https://eclectic-macaron-6372b1.netlify.app`
+- GitHub: `https://github.com/diogene5/gemini_codex_calculadoras`
 
 ## O que existe hoje
 
