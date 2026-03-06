@@ -1,4 +1,4 @@
-import { useState } from 'react';
+import { useEffect, useMemo, useState } from 'react';
 import {
   Activity,
   AlertTriangle,
@@ -18,28 +18,35 @@ import {
 import { CalculatorBlueprint } from './calculators/CalculatorBlueprint';
 import { DesignAlternativesLab } from './calculators/DesignAlternativesLab';
 import { PediatricAnaphylaxisCalculator } from './calculators/PediatricAnaphylaxisCalculator';
+import { PediatricAdvancedAnaphylaxisCalculator } from './calculators/PediatricAdvancedAnaphylaxisCalculator';
 import { PediatricBronchiolitisCalculator } from './calculators/PediatricBronchiolitisCalculator';
 import { PediatricBronchospasmCalculator } from './calculators/PediatricBronchospasmCalculator';
 import { PediatricCardiacArrestCalculator } from './calculators/PediatricCardiacArrestCalculator';
 import { PediatricDKACalculator } from './calculators/PediatricDKACalculator';
 import { PediatricHydrationCalculator } from './calculators/PediatricHydrationCalculator';
+import { PediatricIntubationCalculator } from './calculators/PediatricIntubationCalculator';
+import { PediatricRSICalculator } from './calculators/PediatricRSICalculator';
 import { PediatricSedationSafetyCalculator } from './calculators/PediatricSedationSafetyCalculator';
 import { PediatricSeizureCalculator } from './calculators/PediatricSeizureCalculator';
 import { PediatricSepsisCalculator } from './calculators/PediatricSepsisCalculator';
 import { PediatricShockCalculator } from './calculators/PediatricShockCalculator';
 import { PediatricTachycardiaCalculator } from './calculators/PediatricTachycardiaCalculator';
+import { PediatricVentilationCalculator } from './calculators/PediatricVentilationCalculator';
 import { VasoactiveInfusionCalculator } from './calculators/VasoactiveInfusionCalculator';
 import { PwaInstallBanner } from './components/PwaInstallBanner';
+
+const ACTIVE_CALCULATOR_KEY = 'calc-ped-active-module';
+const LEARNING_MODULES_KEY = 'calc-ped-show-learning';
 
 const calculators = [
   {
     id: 'pediatric-hydration',
     name: 'Hidratação Pediátrica',
     subtitle: 'Holiday-Segar + VIG',
-    description:
-      'Combina cálculo de manutenção hídrica, taxa horária e velocidade de infusão de glicose.',
+    description: 'Manutenção hídrica e glicose em uma tela só.',
     category: 'Pediatria',
     badge: 'Pronta para uso',
+    section: 'metabolic',
     icon: Activity,
     component: PediatricHydrationCalculator,
   },
@@ -47,10 +54,11 @@ const calculators = [
     id: 'pediatric-shock',
     name: 'Bolus no Choque',
     subtitle: '10 a 20 mL/kg',
-    description:
-      'Variação para choque com leitura rápida de bolus único, acumulado e faixa inicial.',
+    description: 'Fluido rápido por peso para ressuscitação inicial.',
     category: 'Emergência',
     badge: 'Ressuscitação',
+    section: 'immediate',
+    quick: true,
     icon: HeartHandshake,
     component: PediatricShockCalculator,
   },
@@ -58,10 +66,10 @@ const calculators = [
     id: 'pediatric-bronchiolitis',
     name: 'Bronquiolite + HFNC',
     subtitle: '1,5 a 2 L/kg/min',
-    description:
-      'Transforma peso em faixa inicial de alto fluxo nasal para bronquiolite moderada a grave.',
+    description: 'Faixa inicial de alto fluxo nasal por peso.',
     category: 'Respiratório',
     badge: 'HFNC',
+    section: 'respiratory',
     icon: Wind,
     component: PediatricBronchiolitisCalculator,
   },
@@ -69,32 +77,81 @@ const calculators = [
     id: 'pediatric-anaphylaxis',
     name: 'Anafilaxia',
     subtitle: 'Adrenalina IM',
-    description:
-      'Dose IM de adrenalina, volume em mL e sugestao de autoinjetor para reduzir atrito na primeira linha.',
+    description: 'Primeira dose IM e autoinjetor por peso.',
     category: 'Emergência',
     badge: 'Epi IM',
+    section: 'immediate',
+    quick: true,
     icon: AlertTriangle,
     component: PediatricAnaphylaxisCalculator,
+  },
+  {
+    id: 'pediatric-anaphylaxis-advanced',
+    name: 'Anafilaxia Avancada',
+    subtitle: 'Infusao + fluido',
+    description: 'Escalada para choque e via aerea ameaçada.',
+    category: 'Emergência',
+    badge: 'Escalada',
+    section: 'immediate',
+    quick: true,
+    icon: AlertTriangle,
+    component: PediatricAdvancedAnaphylaxisCalculator,
   },
   {
     id: 'pediatric-bronchospasm',
     name: 'Broncoespasmo',
     subtitle: 'Salbutamol + Mg',
-    description:
-      'Doses praticas de salbutamol, ipratrópio e magnesio IV para asma aguda/broncoespasmo.',
+    description: 'Salbutamol, ipratrópio e magnésio IV.',
     category: 'Respiratório',
     badge: 'Asma',
+    section: 'respiratory',
     icon: Waves,
     component: PediatricBronchospasmCalculator,
+  },
+  {
+    id: 'pediatric-ventilation',
+    name: 'Ventilacao Pos-Intubacao',
+    subtitle: 'VT + RR + EtCO2',
+    description: 'Ponto de partida da ventilação e perfil obstrutivo.',
+    category: 'Via aérea',
+    badge: 'Ventilar',
+    section: 'airway',
+    quick: true,
+    icon: Wind,
+    component: PediatricVentilationCalculator,
+  },
+  {
+    id: 'pediatric-intubation',
+    name: 'Intubacao',
+    subtitle: 'ETT + profundidade',
+    description: 'Tubo, backup e profundidade por faixa etária.',
+    category: 'Via aérea',
+    badge: 'Tubo',
+    section: 'airway',
+    quick: true,
+    icon: Stethoscope,
+    component: PediatricIntubationCalculator,
+  },
+  {
+    id: 'pediatric-rsi',
+    name: 'Drogas de RSI',
+    subtitle: 'Ketamina + roc',
+    description: 'Indução, bloqueio e rescue hemodinâmico.',
+    category: 'Via aérea',
+    badge: 'RSI',
+    section: 'airway',
+    quick: true,
+    icon: Syringe,
+    component: PediatricRSICalculator,
   },
   {
     id: 'pediatric-cardiac-arrest',
     name: 'Parada Cardíaca',
     subtitle: 'Choque + epinefrina',
-    description:
-      'Resumo numérico do algoritmo PALS para desfibrilação e epinefrina IV/IO.',
+    description: 'Choques e epinefrina IV/IO no PALS.',
     category: 'Emergência',
     badge: 'Código',
+    section: 'immediate',
     icon: Syringe,
     component: PediatricCardiacArrestCalculator,
   },
@@ -102,10 +159,10 @@ const calculators = [
     id: 'pediatric-seizure',
     name: 'Convulsão',
     subtitle: '1a e 2a linha',
-    description:
-      'Benzodiazepinicos de resgate e opcoes de segunda linha para status epilepticus convulsivo.',
+    description: 'Resgate e segunda linha para CSE.',
     category: 'Neuro',
     badge: 'CSE',
+    section: 'immediate',
     icon: Brain,
     component: PediatricSeizureCalculator,
   },
@@ -113,10 +170,11 @@ const calculators = [
     id: 'pediatric-sepsis',
     name: 'Sepse Pediátrica',
     subtitle: 'Fluido + ATB + pressor',
-    description:
-      'Bundle inicial com janelas de antibiotico, bolus por peso e primeira escolha de vasoativo.',
+    description: 'Bundle inicial e primeira escolha vasoativa.',
     category: 'Sepse',
     badge: 'Bundle',
+    section: 'immediate',
+    quick: true,
     icon: Flame,
     component: PediatricSepsisCalculator,
   },
@@ -124,10 +182,10 @@ const calculators = [
     id: 'pediatric-tachycardia',
     name: 'Taquicardia com Pulso',
     subtitle: 'Cardioversão + adenosina',
-    description:
-      'Variação voltada a taquiarritmia instável e ritmo regular monomórfico no PALS.',
+    description: 'Cardioversão e adenosina no PALS.',
     category: 'Arritmias',
     badge: 'Ritmo',
+    section: 'immediate',
     icon: Stethoscope,
     component: PediatricTachycardiaCalculator,
   },
@@ -135,10 +193,10 @@ const calculators = [
     id: 'pediatric-dka',
     name: 'DKA Pediátrica',
     subtitle: 'Severidade + insulina',
-    description:
-      'Sodio corrigido, osmolaridade, severidade bioquimica e faixa de insulina por hora.',
+    description: 'Severidade, sódio corrigido e insulina.',
     category: 'Metabólico',
     badge: 'DKA',
+    section: 'metabolic',
     icon: FlaskConical,
     component: PediatricDKACalculator,
   },
@@ -146,10 +204,10 @@ const calculators = [
     id: 'pediatric-sedation',
     name: 'Segurança na Sedação',
     subtitle: 'Rescue meds + checklist',
-    description:
-      'Foca em rescue medications, laringoespasmo e preparo minimo de uma sedacao segura.',
+    description: 'Checklist e rescue meds para sedação.',
     category: 'Segurança',
     badge: 'Sedação',
+    section: 'support',
     icon: ShieldPlus,
     component: PediatricSedationSafetyCalculator,
   },
@@ -157,10 +215,10 @@ const calculators = [
     id: 'vasoactive-infusion',
     name: 'Drogas Vasoativas',
     subtitle: 'Conversor mcg/kg/min',
-    description:
-      'Converte diluicao local e bomba em mcg/kg/min para epinefrina, norepinefrina e dopamina.',
+    description: 'Bomba e diluição virando mcg/kg/min.',
     category: 'Infusões',
     badge: 'Bomba',
+    section: 'support',
     icon: Syringe,
     component: VasoactiveInfusionCalculator,
   },
@@ -168,10 +226,11 @@ const calculators = [
     id: 'design-lab',
     name: 'Alternativas de Design',
     subtitle: 'Triage, protocol e night shift',
-    description:
-      'Comparador de direções visuais para aprender como adaptar a mesma base a contextos diferentes.',
+    description: 'Comparador de direções visuais.',
     category: 'Design',
     badge: 'Lab',
+    section: 'learning',
+    learning: true,
     icon: Palette,
     component: DesignAlternativesLab,
   },
@@ -179,24 +238,101 @@ const calculators = [
     id: 'blueprint',
     name: 'Blueprint e Princípios',
     subtitle: 'Estrutura reaproveitável',
-    description:
-      'Mostra o padrão de arquivos e os princípios de design para ampliar a coleção.',
+    description: 'Padrão de expansão e princípios de produto.',
     category: 'Framework',
     badge: 'Modelo',
+    section: 'learning',
+    learning: true,
     icon: Blocks,
     component: CalculatorBlueprint,
   },
 ];
 
 const activeCalculatorFallback = calculators[0];
+const sectionOrder = [
+  {
+    id: 'immediate',
+    label: 'Plantao imediato',
+    description: 'Choque, sepse, anafilaxia, arritmia e parada.',
+  },
+  {
+    id: 'airway',
+    label: 'Via aerea',
+    description: 'Intubacao, sequencia rapida e ventilacao.',
+  },
+  {
+    id: 'respiratory',
+    label: 'Respiratorio',
+    description: 'HFNC e broncoespasmo agudo.',
+  },
+  {
+    id: 'metabolic',
+    label: 'Metabolico e fluidos',
+    description: 'Hidratacao e DKA.',
+  },
+  {
+    id: 'support',
+    label: 'Suporte e infusoes',
+    description: 'Sedacao, checklists e conversoes.',
+  },
+  {
+    id: 'learning',
+    label: 'Aprendizado',
+    description: 'Design e blueprint para expandir o projeto.',
+  },
+];
 
 export default function App() {
-  const [activeCalculatorId, setActiveCalculatorId] = useState(activeCalculatorFallback.id);
+  const [activeCalculatorId, setActiveCalculatorId] = useState(() => {
+    if (typeof window === 'undefined') {
+      return activeCalculatorFallback.id;
+    }
+
+    return localStorage.getItem(ACTIVE_CALCULATOR_KEY) ?? activeCalculatorFallback.id;
+  });
+  const [showLearningTools, setShowLearningTools] = useState(() => {
+    if (typeof window === 'undefined') {
+      return false;
+    }
+
+    return localStorage.getItem(LEARNING_MODULES_KEY) === 'true';
+  });
 
   const activeCalculator =
     calculators.find((calculator) => calculator.id === activeCalculatorId) ??
     activeCalculatorFallback;
   const ActiveCalculatorComponent = activeCalculator.component;
+  const clinicalCalculators = useMemo(
+    () => calculators.filter((calculator) => !calculator.learning),
+    []
+  );
+  const learningCalculators = useMemo(
+    () => calculators.filter((calculator) => calculator.learning),
+    []
+  );
+  const groupedCalculators = useMemo(
+    () =>
+      sectionOrder
+        .map((section) => ({
+          ...section,
+          calculators: calculators.filter(
+            (calculator) =>
+              calculator.section === section.id &&
+              (section.id !== 'learning' || showLearningTools)
+          ),
+        }))
+        .filter((section) => section.calculators.length > 0),
+    [showLearningTools]
+  );
+  const quickLaunch = calculators.filter((calculator) => calculator.quick).slice(0, 5);
+
+  useEffect(() => {
+    localStorage.setItem(ACTIVE_CALCULATOR_KEY, activeCalculatorId);
+  }, [activeCalculatorId]);
+
+  useEffect(() => {
+    localStorage.setItem(LEARNING_MODULES_KEY, String(showLearningTools));
+  }, [showLearningTools]);
 
   return (
     <div className="app-shell">
@@ -211,72 +347,98 @@ export default function App() {
             <div className="badge-row">
               <span className="badge badge-ghost">
                 <Sparkles size={14} />
-                React + Vite
+                Emergencia PED
               </span>
               <span className="badge badge-ghost">
                 <FlaskConical size={14} />
-                UI educacional
+                PWA + offline
               </span>
             </div>
 
-            <h1>Biblioteca de Calculadoras Clinicas</h1>
+            <h1>Calculadoras Pediatricas</h1>
             <p>
-              Coleção visual para calculadoras rápidas, com prioridade para emergência
-              pediátrica, fórmulas transparentes e uso confortável no celular.
+              Biblioteca de plantao pensada para celular, com foco em via aerea, choque,
+              ressuscitacao e numeros que precisam aparecer rapido.
             </p>
 
-            <div className="hero-stats">
+            <div className="hero-stats hero-stats-compact">
               <div>
-                <span className="hero-label">Módulos</span>
-                <strong>{calculators.length}</strong>
+                <span className="hero-label">Clinicos</span>
+                <strong>{clinicalCalculators.length}</strong>
               </div>
               <div>
-                <span className="hero-label">Foco</span>
-                <strong>Emergência PED</strong>
+                <span className="hero-label">Aprendizado</span>
+                <strong>{learningCalculators.length}</strong>
               </div>
             </div>
 
-            <div className="library-pills">
-              <span>Cards modulares</span>
-              <span>Fontes oficiais</span>
-              <span>Leitura mobile</span>
-              <span>PWA instalavel</span>
+            <div className="quick-strip">
+              {quickLaunch.map((calculator) => (
+                <button
+                  key={calculator.id}
+                  type="button"
+                  className={`quick-chip ${calculator.id === activeCalculator.id ? 'active' : ''}`}
+                  onClick={() => setActiveCalculatorId(calculator.id)}
+                >
+                  {calculator.name}
+                </button>
+              ))}
             </div>
           </section>
 
           <section className="panel nav-panel">
             <div className="section-heading">
-              <span className="kicker">Calculadoras</span>
-              <h2>Selecione um bloco</h2>
+              <span className="kicker">Catalogo</span>
+              <h2>Acesso por cenario</h2>
             </div>
 
-            <div className="nav-list">
-              {calculators.map((calculator) => {
-                const Icon = calculator.icon;
-                const isActive = calculator.id === activeCalculator.id;
+            <button
+              type="button"
+              className="learning-toggle"
+              onClick={() => setShowLearningTools((current) => !current)}
+            >
+              {showLearningTools
+                ? 'Ocultar modulos de aprendizado'
+                : `Mostrar ${learningCalculators.length} modulos de aprendizado`}
+            </button>
 
-                return (
-                  <button
-                    key={calculator.id}
-                    type="button"
-                    className={`nav-card ${isActive ? 'active' : ''}`}
-                    onClick={() => setActiveCalculatorId(calculator.id)}
-                  >
-                    <div className="nav-card-header">
-                      <div className="nav-card-icon">
-                        <Icon size={18} />
-                      </div>
-                      <span className="badge badge-soft">{calculator.badge}</span>
-                    </div>
+            <div className="nav-group-list">
+              {groupedCalculators.map((section) => (
+                <section key={section.id} className="nav-section">
+                  <div className="nav-section-heading">
+                    <strong>{section.label}</strong>
+                    <span>{section.description}</span>
+                  </div>
 
-                    <div className="nav-card-copy">
-                      <strong>{calculator.name}</strong>
-                      <span>{calculator.subtitle}</span>
-                      <p>{calculator.description}</p>
-                    </div>
-                  </button>
-                );
-              })}
+                  <div className="nav-list">
+                    {section.calculators.map((calculator) => {
+                      const Icon = calculator.icon;
+                      const isActive = calculator.id === activeCalculator.id;
+
+                      return (
+                        <button
+                          key={calculator.id}
+                          type="button"
+                          className={`nav-card ${isActive ? 'active' : ''}`}
+                          onClick={() => setActiveCalculatorId(calculator.id)}
+                        >
+                          <div className="nav-card-header">
+                            <div className="nav-card-icon">
+                              <Icon size={18} />
+                            </div>
+                            <span className="badge badge-soft">{calculator.badge}</span>
+                          </div>
+
+                          <div className="nav-card-copy">
+                            <strong>{calculator.name}</strong>
+                            <span>{calculator.subtitle}</span>
+                          </div>
+                        </button>
+                      );
+                    })}
+                  </div>
+                </section>
+              ))}
             </div>
           </section>
         </aside>
@@ -286,11 +448,11 @@ export default function App() {
             <div>
               <span className="kicker">{activeCalculator.category}</span>
               <h2>{activeCalculator.name}</h2>
-              <p>{activeCalculator.description}</p>
+              <p>{activeCalculator.subtitle}</p>
             </div>
             <div className="workspace-chip">
-              <span>Interface modular</span>
-              <strong>{activeCalculator.subtitle}</strong>
+              <span>{activeCalculator.badge}</span>
+              <strong>{activeCalculator.description}</strong>
             </div>
           </section>
 

@@ -3,6 +3,7 @@
 :root {
   color-scheme: light;
   font-family: 'Space Grotesk', sans-serif;
+  line-height: 1.5;
   --bg: #f2f1ea;
   --surface: rgba(255, 255, 255, 0.72);
   --surface-strong: rgba(255, 255, 255, 0.9);
@@ -30,6 +31,8 @@ html {
 body {
   margin: 0;
   min-height: 100vh;
+  text-rendering: optimizeLegibility;
+  -webkit-font-smoothing: antialiased;
   background:
     radial-gradient(circle at top left, rgba(15, 124, 149, 0.18), transparent 30rem),
     radial-gradient(circle at bottom right, rgba(222, 140, 53, 0.16), transparent 28rem),
@@ -193,7 +196,7 @@ pre {
   z-index: 1;
   width: min(1280px, calc(100% - 2rem));
   margin: 0 auto;
-  padding: 1.5rem 0 3rem;
+  padding: 1rem 0 3rem;
   display: grid;
   grid-template-columns: minmax(290px, 340px) minmax(0, 1fr);
   gap: 1.25rem;
@@ -274,8 +277,8 @@ pre {
 }
 
 .hero-card h1 {
-  font-size: clamp(2rem, 3vw, 2.8rem);
-  line-height: 1;
+  font-size: clamp(1.8rem, 3vw, 2.45rem);
+  line-height: 0.95;
 }
 
 .hero-card p,
@@ -295,7 +298,7 @@ pre {
 
 .hero-card p,
 .panel-hero-copy p {
-  max-width: 38rem;
+  max-width: 30rem;
   color: rgba(255, 255, 255, 0.82);
 }
 
@@ -338,6 +341,10 @@ pre {
 
 .hero-stats {
   grid-template-columns: repeat(2, minmax(0, 1fr));
+}
+
+.hero-stats-compact div {
+  padding: 0.85rem 1rem;
 }
 
 .library-pills {
@@ -405,6 +412,58 @@ pre {
   background: var(--surface-strong);
 }
 
+.quick-strip {
+  display: flex;
+  gap: 0.55rem;
+  flex-wrap: wrap;
+}
+
+.quick-chip,
+.learning-toggle {
+  border: 1px solid rgba(18, 33, 42, 0.08);
+  border-radius: 999px;
+  min-height: 2.6rem;
+  font-weight: 700;
+}
+
+.quick-chip {
+  padding: 0.65rem 0.9rem;
+  background: rgba(255, 255, 255, 0.16);
+  color: white;
+}
+
+.quick-chip.active {
+  background: rgba(255, 255, 255, 0.92);
+  color: var(--ink);
+}
+
+.learning-toggle {
+  width: 100%;
+  padding: 0.8rem 1rem;
+  background: rgba(18, 33, 42, 0.04);
+  color: var(--ink);
+}
+
+.nav-group-list,
+.nav-section {
+  display: grid;
+  gap: 0.95rem;
+}
+
+.nav-section-heading {
+  display: grid;
+  gap: 0.18rem;
+}
+
+.nav-section-heading strong {
+  font-size: 0.95rem;
+}
+
+.nav-section-heading span {
+  color: var(--muted);
+  font-size: 0.86rem;
+}
+
 .section-heading {
   display: grid;
   gap: 0.3rem;
@@ -416,17 +475,17 @@ pre {
 
 .nav-list {
   display: grid;
-  gap: 0.85rem;
+  gap: 0.7rem;
 }
 
 .nav-card {
   display: grid;
-  gap: 0.9rem;
+  gap: 0.75rem;
   width: 100%;
   border: 1px solid transparent;
   background: linear-gradient(180deg, rgba(255, 255, 255, 0.96), rgba(245, 244, 239, 0.9));
-  border-radius: 24px;
-  padding: 1rem;
+  border-radius: 22px;
+  padding: 0.9rem 0.95rem;
   text-align: left;
   transition:
     transform 180ms ease,
@@ -465,19 +524,17 @@ pre {
 
 .nav-card-copy {
   display: grid;
-  gap: 0.25rem;
+  gap: 0.18rem;
 }
 
 .nav-card-copy strong {
-  font-size: 1.02rem;
+  font-size: 0.98rem;
 }
 
 .nav-card-copy span {
-  color: var(--muted);
-}
-
-.nav-card-copy p {
   color: #425159;
+  font-size: 0.88rem;
+  line-height: 1.35;
 }
 
 .workspace {
@@ -493,8 +550,8 @@ pre {
 }
 
 .workspace-chip {
-  min-width: 14rem;
-  padding: 1rem 1.1rem;
+  min-width: 13rem;
+  padding: 0.95rem 1rem;
   background: linear-gradient(135deg, rgba(18, 33, 42, 0.96), rgba(38, 95, 88, 0.92));
   color: white;
 }
@@ -537,6 +594,15 @@ pre {
 .metric-card strong {
   margin-top: 0.35rem;
   font-size: clamp(1.35rem, 2vw, 2rem);
+}
+
+.metric-card p,
+.note-card li,
+.source-copy p,
+.status-banner p,
+.alert-strip p,
+.result-hero p {
+  line-height: 1.45;
 }
 
 .field {
@@ -993,6 +1059,12 @@ pre {
     width: 100%;
   }
 
+  .quick-strip {
+    overflow-x: auto;
+    flex-wrap: nowrap;
+    padding-bottom: 0.15rem;
+  }
+
   .metric-grid,
   .metric-grid.two-columns,
   .metric-grid.three-columns,
@@ -1025,7 +1097,7 @@ pre {
   .workspace-header h2,
   .panel-hero-copy h3,
   .result-hero h3 {
-    font-size: 1.7rem;
+    font-size: 1.55rem;
   }
 
   .nav-card,
@@ -1038,5 +1110,9 @@ pre {
 
   .toggle-grid {
     grid-template-columns: 1fr;
+  }
+
+  .panel-hero-copy p {
+    display: none;
   }
 }

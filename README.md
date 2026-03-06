@@ -10,14 +10,21 @@ Colecao em React + Vite para calculadoras educacionais com foco em emergencia pe
 ## O que existe hoje
 
 - Shell modular para calculadoras clinicas.
+- Navegacao reorganizada por cenario clinico.
+- Acesso rapido para modulos mais urgentes.
+- Modulos de aprendizado escondidos por padrao para reduzir ruido na tela principal.
 - PWA instalavel com banner de instalacao.
 - Modo offline com cache do shell, assets e fallback de navegacao.
-- Modulos:
+- Modulos clinicos:
   - Hidratacao pediatrica
   - Bolus no choque
   - Bronquiolite + HFNC
   - Anafilaxia
+  - Anafilaxia avancada
   - Broncoespasmo
+  - Ventilacao pos-intubacao
+  - Intubacao
+  - Drogas de sequencia rapida
   - Parada cardiaca pediatrica
   - Convulsao
   - Sepse pediatrica
@@ -25,6 +32,7 @@ Colecao em React + Vite para calculadoras educacionais com foco em emergencia pe
   - DKA pediatrica
   - Seguranca na sedacao
   - Drogas vasoativas
+- Modulos de aprendizado:
   - Alternativas de design
   - Blueprint e principios
 
@@ -37,6 +45,23 @@ Colecao em React + Vite para calculadoras educacionais com foco em emergencia pe
 - Netlify
 - Service Worker manual
 - Manifest PWA manual
+
+## O que e PWA
+
+PWA significa `Progressive Web App`.
+
+Na pratica:
+
+- e um site que se comporta mais como app
+- pode ser instalado na tela inicial do celular
+- pode abrir em tela cheia ou quase isso
+- pode manter parte do conteudo em cache para continuar util offline
+
+Conceitos principais:
+
+- `site` e o canal de distribuicao
+- `manifest` diz nome, icone e comportamento de instalacao
+- `service worker` cuida de cache, offline e parte da experiencia de app
 
 ## Como rodar localmente
 
@@ -119,6 +144,27 @@ Depois que a pasta local estiver vinculada:
 npx netlify deploy --prod
 ```
 
+## Revisao de design aplicada
+
+Problemas que apareciam antes:
+
+- a primeira dobra mobile gastava espaco demais com branding e texto longo
+- a navegacao parecia catalogo grande demais e pouco “plantao”
+- havia repeticao de explicacao em hero, header e cards
+- modulos de design competiam com calculadoras clinicas na tela principal
+
+Mudancas feitas:
+
+- hero compactado com chips de acesso rapido
+- agrupamento por cenario: plantao, via aerea, respiratorio, metabolico e suporte
+- modulos de aprendizado escondidos por padrao
+- cards de navegacao reduzidos para nome + subtitle
+- texto secundario retirado da primeira dobra mobile
+
+Principio por tras disso:
+
+- em produto clinico, a primeira pergunta da tela deve ser `qual decisao preciso tomar agora?`
+
 ## Estrutura de pastas
 
 ```text
@@ -146,16 +192,20 @@ npx netlify deploy --prod
 │   │   ├── CalculatorBlueprint.jsx
 │   │   ├── DesignAlternativesLab.jsx
 │   │   ├── PediatricAnaphylaxisCalculator.jsx
+│   │   ├── PediatricAdvancedAnaphylaxisCalculator.jsx
 │   │   ├── PediatricBronchiolitisCalculator.jsx
 │   │   ├── PediatricBronchospasmCalculator.jsx
 │   │   ├── PediatricCardiacArrestCalculator.jsx
 │   │   ├── PediatricDKACalculator.jsx
 │   │   ├── PediatricHydrationCalculator.jsx
+│   │   ├── PediatricIntubationCalculator.jsx
+│   │   ├── PediatricRSICalculator.jsx
 │   │   ├── PediatricSedationSafetyCalculator.jsx
 │   │   ├── PediatricSeizureCalculator.jsx
 │   │   ├── PediatricSepsisCalculator.jsx
 │   │   ├── PediatricShockCalculator.jsx
 │   │   ├── PediatricTachycardiaCalculator.jsx
+│   │   ├── PediatricVentilationCalculator.jsx
 │   │   ├── VasoactiveInfusionCalculator.jsx
 │   │   └── shared.js
 │   └── components
@@ -173,37 +223,48 @@ flowchart LR
   C --> E["Choque"]
   C --> F["Bronquiolite + HFNC"]
   C --> G["Anafilaxia"]
-  C --> H["Broncoespasmo"]
-  C --> I["Parada cardiaca"]
-  C --> J["Convulsao"]
-  C --> K["Sepse"]
-  C --> L["Taquicardia com pulso"]
-  C --> M["DKA"]
-  C --> N["Seguranca na sedacao"]
-  C --> O["Drogas vasoativas"]
-  C --> P["Lab de design"]
-  C --> Q["Blueprint e principios"]
-  B --> R["PWA: manifest + service worker + icones"]
-  R --> S["Banner de instalacao"]
-  R --> T["Fallback offline"]
-  D --> U["Build de producao"]
-  E --> U
-  F --> U
-  G --> U
-  H --> U
-  I --> U
-  J --> U
-  K --> U
-  L --> U
-  M --> U
-  N --> U
-  O --> U
-  P --> V["README completo"]
-  Q --> V
-  U --> W["Netlify"]
-  V --> X["Git local"]
-  W --> Y["GitHub push"]
-  X --> Y
+  C --> H["Anafilaxia avancada"]
+  C --> I["Broncoespasmo"]
+  C --> J["Ventilacao pos-intubacao"]
+  C --> K["Intubacao"]
+  C --> L["Drogas de RSI"]
+  C --> M["Parada cardiaca"]
+  C --> N["Convulsao"]
+  C --> O["Sepse"]
+  C --> P["Taquicardia com pulso"]
+  C --> Q["DKA"]
+  C --> R["Seguranca na sedacao"]
+  C --> S["Drogas vasoativas"]
+  C --> T["Lab de design"]
+  C --> U["Blueprint e principios"]
+  B --> V["PWA: manifest + service worker + icones"]
+  V --> W["Banner de instalacao"]
+  V --> X["Fallback offline"]
+  C --> Y["Navegacao por cenario"]
+  Y --> Z["Quick launch"]
+  Y --> AA["Aprendizado escondido por padrao"]
+  D --> AB["Build de producao"]
+  E --> AB
+  F --> AB
+  G --> AB
+  H --> AB
+  I --> AB
+  J --> AB
+  K --> AB
+  L --> AB
+  M --> AB
+  N --> AB
+  O --> AB
+  P --> AB
+  Q --> AB
+  R --> AB
+  S --> AB
+  T --> AC["README completo"]
+  U --> AC
+  AB --> AD["Netlify"]
+  AC --> AE["Git local"]
+  AD --> AF["GitHub push"]
+  AE --> AF
 ```
 
 ## Principios de produto e design
@@ -222,11 +283,45 @@ flowchart LR
 - Mantenha o estilo compartilhado e a logica do dominio em lugares diferentes.
 - Pense em distribuicao desde o inicio: web, PWA, deploy, offline e documentacao.
 
+## Benchmark rapido
+
+Apps e produtos semelhantes que valem observar:
+
+- MDCalc: excelente em busca rapida, densidade util e reducao de atrito
+- Pedi STAT: referencia classica de ergonomia para emergencias pediatricas
+- Figma Community: boa para observar bibliotecas mobile de healthcare e emergency UI
+
+O que puxei dessas referencias:
+
+- menos texto na navegacao
+- hierarquia forte do numero principal
+- agrupamento por tarefa e nao por “tipo de componente”
+- primeira dobra pensada para pressa real, nao para apresentar o projeto
+
+## Referencias de produto e design
+
+- web.dev PWA learning hub:
+  `https://web.dev/learn/pwa/`
+- Chrome developers, installability/PWA:
+  `https://developer.chrome.com/docs/capabilities/pwa-install/`
+- Apple Human Interface Guidelines:
+  `https://developer.apple.com/design/human-interface-guidelines/`
+- Material 3 accessible design:
+  `https://m3.material.io/foundations/accessible-design/overview`
+- Health.gov health literacy:
+  `https://health.gov/our-work/national-health-initiatives/health-literacy`
+- MDCalc:
+  `https://www.mdcalc.com/`
+- Pedi STAT:
+  `https://www.pedistat.com/`
+- Figma Community:
+  `https://www.figma.com/community`
+
 ## Ideias para continuar
 
 - Modo plantao com cards ainda mais agressivos.
 - URLs compartilhaveis com estado preenchido.
-- Mais modulos: broncoespasmo grave, ventilacao, drogas de intubacao, anafilaxia avancada.
+- Mais modulos: anafilaxia peri-arrest, ventilacao nao invasiva, broncoespasmo ventilado, drogas de infusao continua.
 - Tema institucional por hospital ou curso.
 - Modo ensino com formulas destrinchadas em passos.
 
@@ -260,6 +355,24 @@ flowchart LR
   `https://sccm.org/Admin/getmedia/cde6bdbd-cd1f-4ca9-a394-0673bdaba71b/Initial-Resuscitation-Algorithm-for-Children.pdf`
 - CPS Sepsis guideline:
   `https://cps.ca/documents/position/diagnosis-and-management-of-sepsis-in-the-paediatric-patient`
+- ACI APLS formulas:
+  `https://aci.health.nsw.gov.au/ecat/appendices/apls-formula`
+- ACI Emergency Resuscitation Cue Lanyard Card:
+  `https://aci.health.nsw.gov.au/__data/assets/pdf_file/0010/495757/Emergency-Resuscitation-Cue-Lanyard-Card.pdf`
+- RCH Emergency airway management:
+  `https://www.rch.org.au/clinicalguide/guideline_index/Emergency_airway_management/`
+- RCH Trauma airway management:
+  `https://www.rch.org.au/trauma-service/manual/airway-management/`
+- ECI Ventilation in the crashing asthmatic:
+  `https://aci.health.nsw.gov.au/networks/eci/clinical/tools/respiratory/asthma/the-crashing-patient-life-threatening-asthma/ventilation-in-the-crashing-asthmatic`
+- RCH anaphylaxis clinical resources:
+  `https://www.rch.org.au/anaphylaxis/clinical_resources/`
+- Queensland anaphylaxis medication flowchart:
+  `https://www.childrens.health.qld.gov.au/health-a-to-z/anaphylaxis/medication-flowchart`
+- eCAT paediatric anaphylaxis:
+  `https://aci.health.nsw.gov.au/ecat/paediatric/anaphylaxis`
+- Queensland childrens resuscitation emergency drug dosage:
+  `https://www.childrens.health.qld.gov.au/__data/assets/pdf_file/0034/296647/childrens-resuscitation-emergency-drug-dosage.pdf`
 
 ## Git
 
