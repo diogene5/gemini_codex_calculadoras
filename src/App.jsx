@@ -1,6 +1,7 @@
 import { useState } from 'react';
 import {
   Activity,
+  Brain,
   Blocks,
   FlaskConical,
   HeartHandshake,
@@ -8,11 +9,17 @@ import {
   Sparkles,
   Stethoscope,
   Syringe,
+  Wind,
+  ShieldPlus,
 } from 'lucide-react';
 import { CalculatorBlueprint } from './calculators/CalculatorBlueprint';
 import { DesignAlternativesLab } from './calculators/DesignAlternativesLab';
+import { PediatricBronchiolitisCalculator } from './calculators/PediatricBronchiolitisCalculator';
 import { PediatricCardiacArrestCalculator } from './calculators/PediatricCardiacArrestCalculator';
+import { PediatricDKACalculator } from './calculators/PediatricDKACalculator';
 import { PediatricHydrationCalculator } from './calculators/PediatricHydrationCalculator';
+import { PediatricSedationSafetyCalculator } from './calculators/PediatricSedationSafetyCalculator';
+import { PediatricSeizureCalculator } from './calculators/PediatricSeizureCalculator';
 import { PediatricShockCalculator } from './calculators/PediatricShockCalculator';
 import { PediatricTachycardiaCalculator } from './calculators/PediatricTachycardiaCalculator';
 
@@ -40,6 +47,17 @@ const calculators = [
     component: PediatricShockCalculator,
   },
   {
+    id: 'pediatric-bronchiolitis',
+    name: 'Bronquiolite + HFNC',
+    subtitle: '1,5 a 2 L/kg/min',
+    description:
+      'Transforma peso em faixa inicial de alto fluxo nasal para bronquiolite moderada a grave.',
+    category: 'Respiratório',
+    badge: 'HFNC',
+    icon: Wind,
+    component: PediatricBronchiolitisCalculator,
+  },
+  {
     id: 'pediatric-cardiac-arrest',
     name: 'Parada Cardíaca',
     subtitle: 'Choque + epinefrina',
@@ -51,6 +69,17 @@ const calculators = [
     component: PediatricCardiacArrestCalculator,
   },
   {
+    id: 'pediatric-seizure',
+    name: 'Convulsão',
+    subtitle: '1a e 2a linha',
+    description:
+      'Benzodiazepinicos de resgate e opcoes de segunda linha para status epilepticus convulsivo.',
+    category: 'Neuro',
+    badge: 'CSE',
+    icon: Brain,
+    component: PediatricSeizureCalculator,
+  },
+  {
     id: 'pediatric-tachycardia',
     name: 'Taquicardia com Pulso',
     subtitle: 'Cardioversão + adenosina',
@@ -60,6 +89,28 @@ const calculators = [
     badge: 'Ritmo',
     icon: Stethoscope,
     component: PediatricTachycardiaCalculator,
+  },
+  {
+    id: 'pediatric-dka',
+    name: 'DKA Pediátrica',
+    subtitle: 'Severidade + insulina',
+    description:
+      'Sodio corrigido, osmolaridade, severidade bioquimica e faixa de insulina por hora.',
+    category: 'Metabólico',
+    badge: 'DKA',
+    icon: FlaskConical,
+    component: PediatricDKACalculator,
+  },
+  {
+    id: 'pediatric-sedation',
+    name: 'Segurança na Sedação',
+    subtitle: 'Rescue meds + checklist',
+    description:
+      'Foca em rescue medications, laringoespasmo e preparo minimo de uma sedacao segura.',
+    category: 'Segurança',
+    badge: 'Sedação',
+    icon: ShieldPlus,
+    component: PediatricSedationSafetyCalculator,
   },
   {
     id: 'design-lab',
@@ -136,6 +187,7 @@ export default function App() {
               <span>Cards modulares</span>
               <span>Fontes oficiais</span>
               <span>Leitura mobile</span>
+              <span>PWA instalavel</span>
             </div>
           </section>
 
