@@ -1,6 +1,6 @@
 # Biblioteca de Calculadoras Clinicas
 
-Colecao em React + Vite para calculadoras educacionais com foco em emergencia pediatrica. O projeto foi estruturado para uso rapido em desktop, tablet e celular, com publicacao em Netlify e suporte a instalacao como PWA.
+Colecao em React + Vite para calculadoras educacionais com foco em emergencia pediatrica. O projeto foi estruturado para uso rapido em desktop, tablet e celular, com publicacao em Netlify, instalacao como PWA e suporte offline reforcado.
 
 ## Links
 
@@ -10,16 +10,21 @@ Colecao em React + Vite para calculadoras educacionais com foco em emergencia pe
 ## O que existe hoje
 
 - Shell modular para calculadoras clinicas.
-- PWA instalavel no celular.
+- PWA instalavel com banner de instalacao.
+- Modo offline com cache do shell, assets e fallback de navegacao.
 - Modulos:
   - Hidratacao pediatrica
   - Bolus no choque
   - Bronquiolite + HFNC
+  - Anafilaxia
+  - Broncoespasmo
   - Parada cardiaca pediatrica
   - Convulsao
+  - Sepse pediatrica
   - Taquicardia com pulso
   - DKA pediatrica
   - Seguranca na sedacao
+  - Drogas vasoativas
   - Alternativas de design
   - Blueprint e principios
 
@@ -31,6 +36,7 @@ Colecao em React + Vite para calculadoras educacionais com foco em emergencia pe
 - CSS customizado
 - Netlify
 - Service Worker manual
+- Manifest PWA manual
 
 ## Como rodar localmente
 
@@ -64,24 +70,28 @@ Arquivos principais:
 
 - `public/manifest.webmanifest`
 - `public/sw.js`
+- `public/offline.html`
 - `public/icon-192.png`
 - `public/icon-512.png`
 - `public/maskable-icon.png`
-
-Registro do service worker:
-
+- `src/components/PwaInstallBanner.jsx`
 - `src/main.jsx`
-
-Configuracao HTML:
-
 - `index.html`
+
+### O que a PWA faz
+
+- Registra o service worker apenas em producao.
+- Exibe banner de instalacao quando o navegador permite.
+- Exibe orientacao manual no iPhone/iPad.
+- Mostra aviso quando o dispositivo fica offline.
+- Mantem o shell do app, assets visitados e fallback de navegacao em cache.
 
 ### Como instalar no celular
 
 Android:
 
 1. Abra o site no Chrome.
-2. Use `Install app` ou `Adicionar a tela inicial`.
+2. Aceite o banner `Instalar` ou use `Install app`.
 
 iPhone/iPad:
 
@@ -91,8 +101,7 @@ iPhone/iPad:
 
 Observacao:
 
-- Neste projeto, o service worker registra apenas em producao.
-- O melhor lugar para testar instalacao e comportamento PWA e a URL do Netlify.
+- O melhor lugar para validar instalacao e offline e a URL do Netlify.
 
 ## Como publicar no Netlify
 
@@ -127,23 +136,30 @@ npx netlify deploy --prod
 │   ├── manifest.webmanifest
 │   ├── maskable-icon.png
 │   ├── maskable-icon.svg
+│   ├── offline.html
 │   └── sw.js
 ├── src
 │   ├── App.jsx
 │   ├── main.jsx
 │   ├── styles.css
-│   └── calculators
-│       ├── CalculatorBlueprint.jsx
-│       ├── DesignAlternativesLab.jsx
-│       ├── PediatricBronchiolitisCalculator.jsx
-│       ├── PediatricCardiacArrestCalculator.jsx
-│       ├── PediatricDKACalculator.jsx
-│       ├── PediatricHydrationCalculator.jsx
-│       ├── PediatricSedationSafetyCalculator.jsx
-│       ├── PediatricSeizureCalculator.jsx
-│       ├── PediatricShockCalculator.jsx
-│       ├── PediatricTachycardiaCalculator.jsx
-│       └── shared.js
+│   ├── calculators
+│   │   ├── CalculatorBlueprint.jsx
+│   │   ├── DesignAlternativesLab.jsx
+│   │   ├── PediatricAnaphylaxisCalculator.jsx
+│   │   ├── PediatricBronchiolitisCalculator.jsx
+│   │   ├── PediatricBronchospasmCalculator.jsx
+│   │   ├── PediatricCardiacArrestCalculator.jsx
+│   │   ├── PediatricDKACalculator.jsx
+│   │   ├── PediatricHydrationCalculator.jsx
+│   │   ├── PediatricSedationSafetyCalculator.jsx
+│   │   ├── PediatricSeizureCalculator.jsx
+│   │   ├── PediatricSepsisCalculator.jsx
+│   │   ├── PediatricShockCalculator.jsx
+│   │   ├── PediatricTachycardiaCalculator.jsx
+│   │   ├── VasoactiveInfusionCalculator.jsx
+│   │   └── shared.js
+│   └── components
+│       └── PwaInstallBanner.jsx
 └── vite.config.js
 ```
 
@@ -151,34 +167,43 @@ npx netlify deploy --prod
 
 ```mermaid
 flowchart LR
-  A["Exemplo inicial em React"] --> B["Scaffold React + Vite"]
+  A["Exemplo inicial em React"] --> B["Base React + Vite"]
   B --> C["Shell modular de calculadoras"]
   C --> D["Hidratacao + VIG"]
   C --> E["Choque"]
   C --> F["Bronquiolite + HFNC"]
-  C --> G["Parada cardiaca"]
-  C --> H["Convulsao"]
-  C --> I["Taquicardia com pulso"]
-  C --> J["DKA pediatrica"]
-  C --> K["Seguranca na sedacao"]
-  C --> L["Lab de alternativas de design"]
-  C --> M["Blueprint e principios"]
-  B --> N["PWA: manifest + service worker + icones"]
-  D --> O["Build de producao"]
-  E --> O
-  F --> O
-  G --> O
-  H --> O
-  I --> O
-  J --> O
-  K --> O
-  L --> P["README completo"]
-  M --> P
-  N --> O
-  O --> Q["Netlify"]
-  P --> R["Git local"]
-  Q --> S["GitHub push"]
-  R --> S
+  C --> G["Anafilaxia"]
+  C --> H["Broncoespasmo"]
+  C --> I["Parada cardiaca"]
+  C --> J["Convulsao"]
+  C --> K["Sepse"]
+  C --> L["Taquicardia com pulso"]
+  C --> M["DKA"]
+  C --> N["Seguranca na sedacao"]
+  C --> O["Drogas vasoativas"]
+  C --> P["Lab de design"]
+  C --> Q["Blueprint e principios"]
+  B --> R["PWA: manifest + service worker + icones"]
+  R --> S["Banner de instalacao"]
+  R --> T["Fallback offline"]
+  D --> U["Build de producao"]
+  E --> U
+  F --> U
+  G --> U
+  H --> U
+  I --> U
+  J --> U
+  K --> U
+  L --> U
+  M --> U
+  N --> U
+  O --> U
+  P --> V["README completo"]
+  Q --> V
+  U --> W["Netlify"]
+  V --> X["Git local"]
+  W --> Y["GitHub push"]
+  X --> Y
 ```
 
 ## Principios de produto e design
@@ -192,16 +217,16 @@ flowchart LR
 ## Como usar esse aprendizado em novos projetos
 
 - Comece pelo ponto de decisao, nao pelo componente.
-- Descubra qual e a resposta principal que a tela deve devolver.
+- Descubra qual e a resposta principal da tela.
 - Use uma estrutura repetivel: hero, entrada, resultado, fontes.
-- Deixe o estilo compartilhado em um lugar e a logica clinica em outro.
-- Documente deploy, estrutura e raciocinio desde o inicio.
+- Mantenha o estilo compartilhado e a logica do dominio em lugares diferentes.
+- Pense em distribuicao desde o inicio: web, PWA, deploy, offline e documentacao.
 
 ## Ideias para continuar
 
 - Modo plantao com cards ainda mais agressivos.
 - URLs compartilhaveis com estado preenchido.
-- Mais modulos: broncoespasmo, sepse, anafilaxia, ventilacao, drogas vasoativas.
+- Mais modulos: broncoespasmo grave, ventilacao, drogas de intubacao, anafilaxia avancada.
 - Tema institucional por hospital ou curso.
 - Modo ensino com formulas destrinchadas em passos.
 
@@ -217,6 +242,12 @@ flowchart LR
   `https://pubmed.ncbi.nlm.nih.gov/34342375/`
 - Bronchiolitis HFNC review:
   `https://pubmed.ncbi.nlm.nih.gov/38506440/`
+- ASCIA Acute Management of Anaphylaxis:
+  `https://allergy.org.au/images/ASCIA_HP_Guidelines_Acute_Management_Anaphylaxis_2024.pdf`
+- CPS Stinging Insect Hypersensitivity:
+  `https://cps.ca/documents/position/stinging-insect-hypersensitivity`
+- CPS Acute Asthma algorithms:
+  `https://cps.ca/uploads/documents/All_algorithms_and_additional_documents.pdf`
 - CPS Status Epilepticus Algorithm:
   `https://cps.ca/uploads/documents/Status_epilepticus_algorithm.pdf`
 - CPS Anticonvulsant Table:
@@ -225,6 +256,10 @@ flowchart LR
   `https://www.ispad.org/static/6dd62eae-c8cb-4b4a-84e1efc768505746/Ch11PediatricDiabetes.pdf`
 - CPS Procedural Sedation guideline:
   `https://cps.ca/documents/position/recommendations-for-procedural-sedation-in-infants-children-and-adolescents`
+- SSC pediatric initial resuscitation algorithm:
+  `https://sccm.org/Admin/getmedia/cde6bdbd-cd1f-4ca9-a394-0673bdaba71b/Initial-Resuscitation-Algorithm-for-Children.pdf`
+- CPS Sepsis guideline:
+  `https://cps.ca/documents/position/diagnosis-and-management-of-sepsis-in-the-paediatric-patient`
 
 ## Git
 
@@ -234,7 +269,7 @@ Para ver o historico:
 git log --oneline --decorate
 ```
 
-Para publicar em um remoto depois de configurado:
+Para publicar no remoto configurado:
 
 ```bash
 git push -u origin main

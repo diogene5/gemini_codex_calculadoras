@@ -1,8 +1,10 @@
 import { useState } from 'react';
 import {
   Activity,
+  AlertTriangle,
   Brain,
   Blocks,
+  Flame,
   FlaskConical,
   HeartHandshake,
   Palette,
@@ -11,17 +13,23 @@ import {
   Syringe,
   Wind,
   ShieldPlus,
+  Waves,
 } from 'lucide-react';
 import { CalculatorBlueprint } from './calculators/CalculatorBlueprint';
 import { DesignAlternativesLab } from './calculators/DesignAlternativesLab';
+import { PediatricAnaphylaxisCalculator } from './calculators/PediatricAnaphylaxisCalculator';
 import { PediatricBronchiolitisCalculator } from './calculators/PediatricBronchiolitisCalculator';
+import { PediatricBronchospasmCalculator } from './calculators/PediatricBronchospasmCalculator';
 import { PediatricCardiacArrestCalculator } from './calculators/PediatricCardiacArrestCalculator';
 import { PediatricDKACalculator } from './calculators/PediatricDKACalculator';
 import { PediatricHydrationCalculator } from './calculators/PediatricHydrationCalculator';
 import { PediatricSedationSafetyCalculator } from './calculators/PediatricSedationSafetyCalculator';
 import { PediatricSeizureCalculator } from './calculators/PediatricSeizureCalculator';
+import { PediatricSepsisCalculator } from './calculators/PediatricSepsisCalculator';
 import { PediatricShockCalculator } from './calculators/PediatricShockCalculator';
 import { PediatricTachycardiaCalculator } from './calculators/PediatricTachycardiaCalculator';
+import { VasoactiveInfusionCalculator } from './calculators/VasoactiveInfusionCalculator';
+import { PwaInstallBanner } from './components/PwaInstallBanner';
 
 const calculators = [
   {
@@ -58,6 +66,28 @@ const calculators = [
     component: PediatricBronchiolitisCalculator,
   },
   {
+    id: 'pediatric-anaphylaxis',
+    name: 'Anafilaxia',
+    subtitle: 'Adrenalina IM',
+    description:
+      'Dose IM de adrenalina, volume em mL e sugestao de autoinjetor para reduzir atrito na primeira linha.',
+    category: 'Emergência',
+    badge: 'Epi IM',
+    icon: AlertTriangle,
+    component: PediatricAnaphylaxisCalculator,
+  },
+  {
+    id: 'pediatric-bronchospasm',
+    name: 'Broncoespasmo',
+    subtitle: 'Salbutamol + Mg',
+    description:
+      'Doses praticas de salbutamol, ipratrópio e magnesio IV para asma aguda/broncoespasmo.',
+    category: 'Respiratório',
+    badge: 'Asma',
+    icon: Waves,
+    component: PediatricBronchospasmCalculator,
+  },
+  {
     id: 'pediatric-cardiac-arrest',
     name: 'Parada Cardíaca',
     subtitle: 'Choque + epinefrina',
@@ -78,6 +108,17 @@ const calculators = [
     badge: 'CSE',
     icon: Brain,
     component: PediatricSeizureCalculator,
+  },
+  {
+    id: 'pediatric-sepsis',
+    name: 'Sepse Pediátrica',
+    subtitle: 'Fluido + ATB + pressor',
+    description:
+      'Bundle inicial com janelas de antibiotico, bolus por peso e primeira escolha de vasoativo.',
+    category: 'Sepse',
+    badge: 'Bundle',
+    icon: Flame,
+    component: PediatricSepsisCalculator,
   },
   {
     id: 'pediatric-tachycardia',
@@ -111,6 +152,17 @@ const calculators = [
     badge: 'Sedação',
     icon: ShieldPlus,
     component: PediatricSedationSafetyCalculator,
+  },
+  {
+    id: 'vasoactive-infusion',
+    name: 'Drogas Vasoativas',
+    subtitle: 'Conversor mcg/kg/min',
+    description:
+      'Converte diluicao local e bomba em mcg/kg/min para epinefrina, norepinefrina e dopamina.',
+    category: 'Infusões',
+    badge: 'Bomba',
+    icon: Syringe,
+    component: VasoactiveInfusionCalculator,
   },
   {
     id: 'design-lab',
@@ -151,6 +203,7 @@ export default function App() {
       <div className="ambient ambient-a" />
       <div className="ambient ambient-b" />
       <div className="ambient ambient-c" />
+      <PwaInstallBanner />
 
       <div className="layout">
         <aside className="sidebar">

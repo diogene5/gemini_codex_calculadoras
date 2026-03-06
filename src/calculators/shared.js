@@ -23,10 +23,20 @@ export const sourceLinks = {
     'https://cpr.heart.org/-/media/CPR-Files/CPR-Guidelines-Files/2025-Accessible/Algorithm-PALS-Tachyarrhythmia-LngDscrp-250729-Ed.pdf?sc_lang=en',
   bronchiolitisFlowTrial: 'https://pubmed.ncbi.nlm.nih.gov/34342375/',
   bronchiolitisHFNCReview: 'https://pubmed.ncbi.nlm.nih.gov/38506440/',
+  anaphylaxisGuideline:
+    'https://allergy.org.au/images/ASCIA_HP_Guidelines_Acute_Management_Anaphylaxis_2024.pdf',
+  anaphylaxisCps:
+    'https://cps.ca/documents/position/stinging-insect-hypersensitivity',
+  acuteAsthmaCpsFigure:
+    'https://cps.ca/uploads/documents/All_algorithms_and_additional_documents.pdf',
   seizureAlgorithm: 'https://cps.ca/uploads/documents/Status_epilepticus_algorithm.pdf',
   seizureMedicationTable:
     'https://cps.ca/uploads/documents/TABLE_2._Anticonvulsant_drug_therapies_for_convulsive_status_epilepticus_%28CSE%29_.pdf',
   dkaGuideline: 'https://www.ispad.org/static/6dd62eae-c8cb-4b4a-84e1efc768505746/Ch11PediatricDiabetes.pdf',
   sedationGuideline:
     'https://cps.ca/documents/position/recommendations-for-procedural-sedation-in-infants-children-and-adolescents',
+  sepsisGuideline:
+    'https://cps.ca/documents/position/diagnosis-and-management-of-sepsis-in-the-paediatric-patient',
+  sepsisResuscitation:
+    'https://sccm.org/Admin/getmedia/cde6bdbd-cd1f-4ca9-a394-0673bdaba71b/Initial-Resuscitation-Algorithm-for-Children.pdf',
 };

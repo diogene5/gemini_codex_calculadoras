@@ -70,6 +70,91 @@ pre {
   overflow: hidden;
 }
 
+.pwa-stack {
+  position: sticky;
+  top: 0;
+  z-index: 3;
+  width: min(1280px, calc(100% - 2rem));
+  margin: 0.9rem auto 0;
+  display: grid;
+  gap: 0.75rem;
+}
+
+.pwa-banner {
+  display: flex;
+  justify-content: space-between;
+  gap: 1rem;
+  align-items: center;
+  padding: 0.95rem 1rem;
+  border-radius: 24px;
+  background: rgba(18, 33, 42, 0.92);
+  color: #f3f6f8;
+  box-shadow: 0 16px 48px rgba(18, 33, 42, 0.22);
+  border: 1px solid rgba(255, 255, 255, 0.1);
+}
+
+.pwa-banner-offline {
+  background: rgba(146, 62, 44, 0.92);
+}
+
+.pwa-banner-copy {
+  display: grid;
+  gap: 0.2rem;
+}
+
+.pwa-banner-title {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.45rem;
+  font-size: 0.9rem;
+  font-weight: 700;
+}
+
+.pwa-banner-copy p {
+  margin: 0;
+  color: rgba(243, 246, 248, 0.82);
+}
+
+.pwa-banner-actions {
+  display: flex;
+  gap: 0.6rem;
+  align-items: center;
+}
+
+.pwa-primary,
+.pwa-ghost {
+  border-radius: 999px;
+  border: 0;
+  min-height: 2.6rem;
+}
+
+.pwa-primary {
+  padding: 0.7rem 1rem;
+  background: #f3f6f8;
+  color: var(--ink);
+  font-weight: 700;
+}
+
+.pwa-ghost {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  width: 2.6rem;
+  background: rgba(255, 255, 255, 0.14);
+  color: #f3f6f8;
+}
+
+.pwa-chip {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.4rem;
+  border-radius: 999px;
+  padding: 0.55rem 0.85rem;
+  background: rgba(255, 255, 255, 0.16);
+  font-size: 0.82rem;
+  font-weight: 700;
+}
+
 .ambient {
   position: fixed;
   z-index: 0;
@@ -881,6 +966,16 @@ pre {
 }
 
 @media (max-width: 840px) {
+  .pwa-banner {
+    flex-direction: column;
+    align-items: flex-start;
+  }
+
+  .pwa-banner-actions {
+    width: 100%;
+    justify-content: flex-end;
+  }
+
   .workspace-header,
   .result-hero,
   .bar-header,
@@ -911,6 +1006,11 @@ pre {
 }
 
 @media (max-width: 640px) {
+  .pwa-stack {
+    width: min(100% - 1rem, 100%);
+    margin-top: 0.5rem;
+  }
+
   .layout {
     width: min(100% - 1rem, 100%);
     padding-top: 0.5rem;
