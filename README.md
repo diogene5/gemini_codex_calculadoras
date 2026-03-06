@@ -2,6 +2,10 @@
 
 Projeto React + Vite para criar calculadoras interativas com foco em emergencia pediatrica.
 
+## Versao publicada
+
+- Producao no Netlify: `https://eclectic-macaron-6372b1.netlify.app`
+
 ## Rodando localmente
 
 ```bash
@@ -47,3 +51,9 @@ O projeto ja inclui `netlify.toml`. Quando a CLI estiver autenticada:
 npx netlify init
 npx netlify deploy --prod
 ```
+
+## Compartilhamento recomendado
+
+- Teste rapido na mesma rede: `npm run dev -- --host 0.0.0.0`
+- Compartilhamento estavel com colegas: use a URL do Netlify
+- Proximo passo natural para celular: transformar em PWA instalavel
