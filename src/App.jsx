@@ -4,11 +4,13 @@ import {
   Blocks,
   FlaskConical,
   HeartHandshake,
+  Palette,
   Sparkles,
   Stethoscope,
   Syringe,
 } from 'lucide-react';
 import { CalculatorBlueprint } from './calculators/CalculatorBlueprint';
+import { DesignAlternativesLab } from './calculators/DesignAlternativesLab';
 import { PediatricCardiacArrestCalculator } from './calculators/PediatricCardiacArrestCalculator';
 import { PediatricHydrationCalculator } from './calculators/PediatricHydrationCalculator';
 import { PediatricShockCalculator } from './calculators/PediatricShockCalculator';
@@ -58,6 +60,17 @@ const calculators = [
     badge: 'Ritmo',
     icon: Stethoscope,
     component: PediatricTachycardiaCalculator,
+  },
+  {
+    id: 'design-lab',
+    name: 'Alternativas de Design',
+    subtitle: 'Triage, protocol e night shift',
+    description:
+      'Comparador de direções visuais para aprender como adaptar a mesma base a contextos diferentes.',
+    category: 'Design',
+    badge: 'Lab',
+    icon: Palette,
+    component: DesignAlternativesLab,
   },
   {
     id: 'blueprint',
