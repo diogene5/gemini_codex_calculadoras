@@ -25,6 +25,7 @@ import { PediatricCardiacArrestCalculator } from './calculators/PediatricCardiac
 import { PediatricDKACalculator } from './calculators/PediatricDKACalculator';
 import { PediatricHydrationCalculator } from './calculators/PediatricHydrationCalculator';
 import { PediatricIntubationCalculator } from './calculators/PediatricIntubationCalculator';
+import { PediatricNIVCalculator } from './calculators/PediatricNIVCalculator';
 import { PediatricRSICalculator } from './calculators/PediatricRSICalculator';
 import { PediatricSedationSafetyCalculator } from './calculators/PediatricSedationSafetyCalculator';
 import { PediatricSeizureCalculator } from './calculators/PediatricSeizureCalculator';
@@ -107,6 +108,17 @@ const calculators = [
     section: 'respiratory',
     icon: Waves,
     component: PediatricBronchospasmCalculator,
+  },
+  {
+    id: 'pediatric-niv',
+    name: 'Ventilacao Nao Invasiva',
+    subtitle: 'CPAP + BiPAP',
+    description: 'Pressao inicial e sinais de falha precoce.',
+    category: 'Respiratório',
+    badge: 'VNI',
+    section: 'respiratory',
+    icon: Wind,
+    component: PediatricNIVCalculator,
   },
   {
     id: 'pediatric-ventilation',

@@ -22,6 +22,7 @@ Colecao em React + Vite para calculadoras educacionais com foco em emergencia pe
   - Anafilaxia
   - Anafilaxia avancada
   - Broncoespasmo
+  - Ventilacao nao invasiva
   - Ventilacao pos-intubacao
   - Intubacao
   - Drogas de sequencia rapida
@@ -199,6 +200,7 @@ Principio por tras disso:
 │   │   ├── PediatricDKACalculator.jsx
 │   │   ├── PediatricHydrationCalculator.jsx
 │   │   ├── PediatricIntubationCalculator.jsx
+│   │   ├── PediatricNIVCalculator.jsx
 │   │   ├── PediatricRSICalculator.jsx
 │   │   ├── PediatricSedationSafetyCalculator.jsx
 │   │   ├── PediatricSeizureCalculator.jsx
@@ -225,46 +227,48 @@ flowchart LR
   C --> G["Anafilaxia"]
   C --> H["Anafilaxia avancada"]
   C --> I["Broncoespasmo"]
-  C --> J["Ventilacao pos-intubacao"]
-  C --> K["Intubacao"]
-  C --> L["Drogas de RSI"]
-  C --> M["Parada cardiaca"]
-  C --> N["Convulsao"]
-  C --> O["Sepse"]
-  C --> P["Taquicardia com pulso"]
-  C --> Q["DKA"]
-  C --> R["Seguranca na sedacao"]
-  C --> S["Drogas vasoativas"]
-  C --> T["Lab de design"]
-  C --> U["Blueprint e principios"]
-  B --> V["PWA: manifest + service worker + icones"]
-  V --> W["Banner de instalacao"]
-  V --> X["Fallback offline"]
-  C --> Y["Navegacao por cenario"]
-  Y --> Z["Quick launch"]
-  Y --> AA["Aprendizado escondido por padrao"]
-  D --> AB["Build de producao"]
-  E --> AB
-  F --> AB
-  G --> AB
-  H --> AB
-  I --> AB
-  J --> AB
-  K --> AB
-  L --> AB
-  M --> AB
-  N --> AB
-  O --> AB
-  P --> AB
-  Q --> AB
-  R --> AB
-  S --> AB
-  T --> AC["README completo"]
-  U --> AC
-  AB --> AD["Netlify"]
-  AC --> AE["Git local"]
-  AD --> AF["GitHub push"]
-  AE --> AF
+  C --> J["Ventilacao nao invasiva"]
+  C --> K["Ventilacao pos-intubacao"]
+  C --> L["Intubacao"]
+  C --> M["Drogas de RSI"]
+  C --> N["Parada cardiaca"]
+  C --> O["Convulsao"]
+  C --> P["Sepse"]
+  C --> Q["Taquicardia com pulso"]
+  C --> R["DKA"]
+  C --> S["Seguranca na sedacao"]
+  C --> T["Drogas vasoativas"]
+  C --> U["Lab de design"]
+  C --> V["Blueprint e principios"]
+  B --> W["PWA: manifest + service worker + icones"]
+  W --> X["Banner de instalacao"]
+  W --> Y["Fallback offline"]
+  C --> Z["Navegacao por cenario"]
+  Z --> AA["Quick launch"]
+  Z --> AB["Aprendizado escondido por padrao"]
+  D --> AC["Build de producao"]
+  E --> AC
+  F --> AC
+  G --> AC
+  H --> AC
+  I --> AC
+  J --> AC
+  K --> AC
+  L --> AC
+  M --> AC
+  N --> AC
+  O --> AC
+  P --> AC
+  Q --> AC
+  R --> AC
+  S --> AC
+  T --> AC
+  U --> AD["README completo"]
+  V --> AD
+  AC --> AE["Netlify"]
+  AD --> AF["Git local"]
+  AE --> AG["GitHub push"]
+  AF --> AG
 ```
 
 ## Principios de produto e design
@@ -365,6 +369,10 @@ O que puxei dessas referencias:
   `https://www.rch.org.au/trauma-service/manual/airway-management/`
 - ECI Ventilation in the crashing asthmatic:
   `https://aci.health.nsw.gov.au/networks/eci/clinical/tools/respiratory/asthma/the-crashing-patient-life-threatening-asthma/ventilation-in-the-crashing-asthmatic`
+- Pediatric noninvasive ventilation review:
+  `https://pmc.ncbi.nlm.nih.gov/articles/PMC6513134/`
+- Starship NIV guide:
+  `https://starship.org.nz/guidelines/non-invasive-ventilation-niv-cpap-and-high-flow-humidified-nasal-oxygen-hhfnc/`
 - RCH anaphylaxis clinical resources:
   `https://www.rch.org.au/anaphylaxis/clinical_resources/`
 - Queensland anaphylaxis medication flowchart:

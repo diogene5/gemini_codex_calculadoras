@@ -77,6 +77,9 @@ export const sourceLinks = {
   traumaAirway: 'https://www.rch.org.au/trauma-service/manual/airway-management/',
   asthmaVentilation:
     'https://aci.health.nsw.gov.au/networks/eci/clinical/tools/respiratory/asthma/the-crashing-patient-life-threatening-asthma/ventilation-in-the-crashing-asthmatic',
+  pediatricNivReview: 'https://pmc.ncbi.nlm.nih.gov/articles/PMC6513134/',
+  starshipNiv:
+    'https://starship.org.nz/guidelines/non-invasive-ventilation-niv-cpap-and-high-flow-humidified-nasal-oxygen-hhfnc/',
   advancedAnaphylaxisRch: 'https://www.rch.org.au/anaphylaxis/clinical_resources/',
   advancedAnaphylaxisQld:
     'https://www.childrens.health.qld.gov.au/health-a-to-z/anaphylaxis/medication-flowchart',
