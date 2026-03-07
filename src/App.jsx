@@ -36,8 +36,8 @@ import { PediatricVentilationCalculator } from './calculators/PediatricVentilati
 import { VasoactiveInfusionCalculator } from './calculators/VasoactiveInfusionCalculator';
 import { PwaInstallBanner } from './components/PwaInstallBanner';
 
-const ACTIVE_CALCULATOR_KEY = 'calc-ped-active-module';
-const LEARNING_MODULES_KEY = 'calc-ped-show-learning';
+const ACTIVE_CALCULATOR_KEY = 'calc-ped-active-module-triage';
+const LEARNING_MODULES_KEY = 'calc-ped-show-learning-triage';
 
 const calculators = [
   {
@@ -337,6 +337,15 @@ export default function App() {
     [showLearningTools]
   );
   const quickLaunch = calculators.filter((calculator) => calculator.quick).slice(0, 5);
+  const criticalCalculators = useMemo(
+    () =>
+      calculators.filter(
+        (calculator) => calculator.quick && ['immediate', 'airway'].includes(calculator.section)
+      ),
+    []
+  );
+  const activeSection =
+    sectionOrder.find((section) => section.id === activeCalculator.section) ?? sectionOrder[0];
 
   useEffect(() => {
     localStorage.setItem(ACTIVE_CALCULATOR_KEY, activeCalculatorId);
@@ -347,61 +356,81 @@ export default function App() {
   }, [showLearningTools]);
 
   return (
-    <div className="app-shell">
+    <div className="app-shell triage-shell">
       <div className="ambient ambient-a" />
       <div className="ambient ambient-b" />
       <div className="ambient ambient-c" />
       <PwaInstallBanner />
 
-      <div className="layout">
-        <aside className="sidebar">
-          <section className="panel hero-card">
+      <div className="layout triage-layout">
+        <aside className="sidebar triage-sidebar">
+          <section className="panel hero-card triage-hero-card">
             <div className="badge-row">
               <span className="badge badge-ghost">
                 <Sparkles size={14} />
-                Emergencia PED
+                Triage board
               </span>
               <span className="badge badge-ghost">
                 <FlaskConical size={14} />
-                PWA + offline
+                Pressao alta
               </span>
             </div>
 
-            <h1>Calculadoras Pediatricas</h1>
+            <h1>Painel de Comando</h1>
             <p>
-              Biblioteca de plantao pensada para celular, com foco em via aerea, choque,
-              ressuscitacao e numeros que precisam aparecer rapido.
+              Explora um shell mais denso e orientado a decisao imediata, com atalhos criticos na
+              primeira dobra e menos cara de catalogo.
             </p>
 
-            <div className="hero-stats hero-stats-compact">
+            <div className="hero-stats triage-stats">
+              <div>
+                <span className="hero-label">Criticos</span>
+                <strong>{criticalCalculators.length}</strong>
+              </div>
               <div>
                 <span className="hero-label">Clinicos</span>
                 <strong>{clinicalCalculators.length}</strong>
               </div>
               <div>
-                <span className="hero-label">Aprendizado</span>
-                <strong>{learningCalculators.length}</strong>
+                <span className="hero-label">Foco</span>
+                <strong>{activeSection.label}</strong>
               </div>
             </div>
 
-            <div className="quick-strip">
-              {quickLaunch.map((calculator) => (
+            <div className="triage-callouts">
+              <span>Hipotensao</span>
+              <span>Via aerea</span>
+              <span>Falha precoce</span>
+              <span>Reavaliar em minutos</span>
+            </div>
+          </section>
+
+          <section className="panel triage-priority-panel">
+            <div className="section-heading">
+              <span className="kicker">Primeiros 60s</span>
+              <h2>Atalhos criticos</h2>
+            </div>
+
+            <div className="triage-priority-grid">
+              {criticalCalculators.map((calculator) => (
                 <button
                   key={calculator.id}
                   type="button"
-                  className={`quick-chip ${calculator.id === activeCalculator.id ? 'active' : ''}`}
+                  className={`triage-priority-card ${calculator.id === activeCalculator.id ? 'active' : ''}`}
                   onClick={() => setActiveCalculatorId(calculator.id)}
                 >
-                  {calculator.name}
+                  <span>{calculator.badge}</span>
+                  <strong>{calculator.name}</strong>
+                  <small>{calculator.subtitle}</small>
                 </button>
               ))}
             </div>
           </section>
 
-          <section className="panel nav-panel">
+          <section className="panel nav-panel triage-nav-panel">
             <div className="section-heading">
-              <span className="kicker">Catalogo</span>
-              <h2>Acesso por cenario</h2>
+              <span className="kicker">Fluxos</span>
+              <h2>Frentes de trabalho</h2>
             </div>
 
             <button
@@ -431,7 +460,7 @@ export default function App() {
                         <button
                           key={calculator.id}
                           type="button"
-                          className={`nav-card ${isActive ? 'active' : ''}`}
+                          className={`nav-card triage-nav-card ${isActive ? 'active' : ''}`}
                           onClick={() => setActiveCalculatorId(calculator.id)}
                         >
                           <div className="nav-card-header">
@@ -455,8 +484,8 @@ export default function App() {
           </section>
         </aside>
 
-        <main className="workspace">
-          <section className="panel workspace-header">
+        <main className="workspace triage-workspace">
+          <section className="panel workspace-header triage-workspace-header">
             <div>
               <span className="kicker">{activeCalculator.category}</span>
               <h2>{activeCalculator.name}</h2>
@@ -466,6 +495,24 @@ export default function App() {
               <span>{activeCalculator.badge}</span>
               <strong>{activeCalculator.description}</strong>
             </div>
+          </section>
+
+          <section className="triage-ops-grid">
+            <article className="panel triage-ops-card">
+              <span className="kicker">Usar quando</span>
+              <h3>{activeSection.label}</h3>
+              <p>{activeSection.description}</p>
+            </article>
+            <article className="panel triage-ops-card">
+              <span className="kicker">Prioridade</span>
+              <h3>Executar e rever</h3>
+              <p>Este shell assume decisao em ciclos curtos, nao leitura longa.</p>
+            </article>
+            <article className="panel triage-ops-card">
+              <span className="kicker">Depois da conta</span>
+              <h3>Reavaliacao rapida</h3>
+              <p>Perfusao, respiracao, tolerancia do suporte e necessidade de escalada.</p>
+            </article>
           </section>
 
           <ActiveCalculatorComponent />
