@@ -1116,3 +1116,151 @@ pre {
     display: none;
   }
 }
+
+.protocol-shell {
+  background:
+    radial-gradient(circle at top left, rgba(229, 165, 60, 0.2), transparent 22rem),
+    radial-gradient(circle at bottom right, rgba(15, 154, 114, 0.16), transparent 24rem),
+    linear-gradient(180deg, #fcfaf2 0%, #efe9db 100%);
+}
+
+.protocol-layout {
+  grid-template-columns: minmax(320px, 390px) minmax(0, 1fr);
+}
+
+.protocol-hero-card {
+  background: linear-gradient(145deg, #5f3c28 0%, #96613a 55%, #d4a054 100%);
+}
+
+.protocol-stats {
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+}
+
+.protocol-quick-strip {
+  gap: 0.45rem;
+}
+
+.protocol-quick-chip {
+  background: rgba(255, 255, 255, 0.2);
+}
+
+.protocol-lens-grid {
+  display: grid;
+  grid-template-columns: repeat(3, minmax(0, 1fr));
+  gap: 0.7rem;
+}
+
+.protocol-lens-grid article,
+.protocol-map-card,
+.protocol-education-panel {
+  border-radius: 22px;
+  border: 1px solid rgba(18, 33, 42, 0.08);
+}
+
+.protocol-lens-grid article {
+  display: grid;
+  gap: 0.2rem;
+  padding: 0.9rem;
+  background: rgba(255, 255, 255, 0.12);
+}
+
+.protocol-lens-grid span {
+  font-size: 0.78rem;
+  font-weight: 700;
+  color: rgba(255, 255, 255, 0.72);
+}
+
+.protocol-lens-grid strong {
+  font-size: 0.95rem;
+}
+
+.protocol-nav-panel {
+  background: rgba(255, 252, 244, 0.92);
+}
+
+.protocol-nav-card {
+  gap: 0.85rem;
+}
+
+.protocol-nav-card .nav-card-copy p {
+  display: block;
+}
+
+.protocol-workspace {
+  gap: 1rem;
+}
+
+.protocol-workspace-header {
+  background: rgba(255, 252, 244, 0.92);
+}
+
+.protocol-workspace-header .workspace-chip {
+  background: linear-gradient(135deg, rgba(95, 60, 40, 0.94), rgba(165, 114, 55, 0.88));
+}
+
+.protocol-map-grid {
+  display: grid;
+  grid-template-columns: repeat(3, minmax(0, 1fr));
+  gap: 0.9rem;
+}
+
+.protocol-map-card {
+  display: grid;
+  gap: 0.35rem;
+  background: linear-gradient(180deg, rgba(255, 255, 255, 0.94), rgba(248, 243, 232, 0.94));
+  padding: 1rem;
+}
+
+.protocol-map-card h3,
+.protocol-education-panel h3 {
+  margin: 0;
+  font-size: 1.05rem;
+}
+
+.protocol-map-card p,
+.protocol-education-panel p {
+  margin: 0;
+  color: #425159;
+}
+
+.protocol-education-panel {
+  display: grid;
+  grid-template-columns: minmax(0, 1.5fr) minmax(240px, 0.8fr);
+  gap: 1rem;
+  padding: 1rem;
+  background: linear-gradient(135deg, rgba(255, 250, 241, 0.96), rgba(241, 234, 214, 0.96));
+}
+
+.protocol-teaching-list {
+  display: grid;
+  gap: 0.2rem;
+  padding: 1rem;
+  border-radius: 20px;
+  background: rgba(95, 60, 40, 0.08);
+}
+
+.protocol-teaching-list span {
+  font-size: 0.78rem;
+  font-weight: 700;
+  text-transform: uppercase;
+  letter-spacing: 0.05em;
+  color: #8a623e;
+}
+
+.protocol-teaching-list strong {
+  margin-bottom: 0.45rem;
+}
+
+@media (max-width: 1080px) {
+  .protocol-layout,
+  .protocol-map-grid,
+  .protocol-education-panel {
+    grid-template-columns: 1fr;
+  }
+}
+
+@media (max-width: 640px) {
+  .protocol-lens-grid {
+    grid-template-columns: 1fr;
+  }
+}

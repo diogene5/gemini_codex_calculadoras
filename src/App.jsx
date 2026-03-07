@@ -36,8 +36,46 @@ import { PediatricVentilationCalculator } from './calculators/PediatricVentilati
 import { VasoactiveInfusionCalculator } from './calculators/VasoactiveInfusionCalculator';
 import { PwaInstallBanner } from './components/PwaInstallBanner';
 
-const ACTIVE_CALCULATOR_KEY = 'calc-ped-active-module';
-const LEARNING_MODULES_KEY = 'calc-ped-show-learning';
+const ACTIVE_CALCULATOR_KEY = 'calc-ped-active-module-protocol';
+const LEARNING_MODULES_KEY = 'calc-ped-show-learning-protocol';
+const protocolFrames = {
+  immediate: {
+    title: 'Reconheca a instabilidade',
+    focus: 'Dose e acao imediata',
+    review: 'Reavaliar em minutos',
+    description: 'Esta familia serve quando a janela de decisao e curta e a primeira intervencao nao pode atrasar.',
+  },
+  airway: {
+    title: 'Prepare antes de agir',
+    focus: 'Escolher material e pressao',
+    review: 'Confirmar resposta e falha',
+    description: 'A logica aqui e reduzir erro de execucao: interface, tubo, drogas e plano de escalada.',
+  },
+  respiratory: {
+    title: 'Apoiar trabalho respiratorio',
+    focus: 'Fluxo ou pressao inicial',
+    review: 'Se melhora ou precisa escalar',
+    description: 'Respiratorio pediatrico costuma melhorar cedo ou falhar cedo. O design valoriza essa leitura.',
+  },
+  metabolic: {
+    title: 'Entender o contexto',
+    focus: 'Taxa, severidade e tendencia',
+    review: 'Checar resposta seriada',
+    description: 'Quando o problema e metabolico, a calculadora ajuda a organizar faixas e riscos antes da proxima conduta.',
+  },
+  support: {
+    title: 'Preparar o entorno',
+    focus: 'Checklist e infusoes',
+    review: 'Seguranca do processo',
+    description: 'Nem toda tela precisa decidir droga. Algumas existem para diminuir falha operacional.',
+  },
+  learning: {
+    title: 'Explorar o sistema',
+    focus: 'Comparar estruturas',
+    review: 'Levar principios adiante',
+    description: 'Este grupo existe para ensino e expansao do produto.',
+  },
+};
 
 const calculators = [
   {
@@ -304,10 +342,11 @@ export default function App() {
   });
   const [showLearningTools, setShowLearningTools] = useState(() => {
     if (typeof window === 'undefined') {
-      return false;
+      return true;
     }
 
-    return localStorage.getItem(LEARNING_MODULES_KEY) === 'true';
+    const saved = localStorage.getItem(LEARNING_MODULES_KEY);
+    return saved === null ? true : saved === 'true';
   });
 
   const activeCalculator =
@@ -337,6 +376,7 @@ export default function App() {
     [showLearningTools]
   );
   const quickLaunch = calculators.filter((calculator) => calculator.quick).slice(0, 5);
+  const activeFrame = protocolFrames[activeCalculator.section] ?? protocolFrames.immediate;
 
   useEffect(() => {
     localStorage.setItem(ACTIVE_CALCULATOR_KEY, activeCalculatorId);
@@ -347,33 +387,33 @@ export default function App() {
   }, [showLearningTools]);
 
   return (
-    <div className="app-shell">
+    <div className="app-shell protocol-shell">
       <div className="ambient ambient-a" />
       <div className="ambient ambient-b" />
       <div className="ambient ambient-c" />
       <PwaInstallBanner />
 
-      <div className="layout">
-        <aside className="sidebar">
-          <section className="panel hero-card">
+      <div className="layout protocol-layout">
+        <aside className="sidebar protocol-sidebar">
+          <section className="panel hero-card protocol-hero-card">
             <div className="badge-row">
               <span className="badge badge-ghost">
                 <Sparkles size={14} />
-                Emergencia PED
+                Protocol studio
               </span>
               <span className="badge badge-ghost">
                 <FlaskConical size={14} />
-                PWA + offline
+                Modo ensino
               </span>
             </div>
 
-            <h1>Calculadoras Pediatricas</h1>
+            <h1>Mapa de Protocolos</h1>
             <p>
-              Biblioteca de plantao pensada para celular, com foco em via aerea, choque,
-              ressuscitacao e numeros que precisam aparecer rapido.
+              Explora uma versao mais didatica do produto, com mais contexto, progressao de
+              raciocinio e espaco para aprender a usar cada modulo.
             </p>
 
-            <div className="hero-stats hero-stats-compact">
+            <div className="hero-stats protocol-stats">
               <div>
                 <span className="hero-label">Clinicos</span>
                 <strong>{clinicalCalculators.length}</strong>
@@ -384,24 +424,39 @@ export default function App() {
               </div>
             </div>
 
-            <div className="quick-strip">
+            <div className="quick-strip protocol-quick-strip">
               {quickLaunch.map((calculator) => (
                 <button
                   key={calculator.id}
                   type="button"
-                  className={`quick-chip ${calculator.id === activeCalculator.id ? 'active' : ''}`}
+                  className={`quick-chip protocol-quick-chip ${calculator.id === activeCalculator.id ? 'active' : ''}`}
                   onClick={() => setActiveCalculatorId(calculator.id)}
                 >
                   {calculator.name}
                 </button>
               ))}
             </div>
+
+            <div className="protocol-lens-grid">
+              <article>
+                <span>1</span>
+                <strong>{activeFrame.title}</strong>
+              </article>
+              <article>
+                <span>2</span>
+                <strong>{activeFrame.focus}</strong>
+              </article>
+              <article>
+                <span>3</span>
+                <strong>{activeFrame.review}</strong>
+              </article>
+            </div>
           </section>
 
-          <section className="panel nav-panel">
+          <section className="panel nav-panel protocol-nav-panel">
             <div className="section-heading">
-              <span className="kicker">Catalogo</span>
-              <h2>Acesso por cenario</h2>
+              <span className="kicker">Colecao</span>
+              <h2>Escolha pelo fluxo</h2>
             </div>
 
             <button
@@ -431,7 +486,7 @@ export default function App() {
                         <button
                           key={calculator.id}
                           type="button"
-                          className={`nav-card ${isActive ? 'active' : ''}`}
+                          className={`nav-card protocol-nav-card ${isActive ? 'active' : ''}`}
                           onClick={() => setActiveCalculatorId(calculator.id)}
                         >
                           <div className="nav-card-header">
@@ -444,6 +499,7 @@ export default function App() {
                           <div className="nav-card-copy">
                             <strong>{calculator.name}</strong>
                             <span>{calculator.subtitle}</span>
+                            <p>{calculator.description}</p>
                           </div>
                         </button>
                       );
@@ -455,8 +511,8 @@ export default function App() {
           </section>
         </aside>
 
-        <main className="workspace">
-          <section className="panel workspace-header">
+        <main className="workspace protocol-workspace">
+          <section className="panel workspace-header protocol-workspace-header">
             <div>
               <span className="kicker">{activeCalculator.category}</span>
               <h2>{activeCalculator.name}</h2>
@@ -465,6 +521,43 @@ export default function App() {
             <div className="workspace-chip">
               <span>{activeCalculator.badge}</span>
               <strong>{activeCalculator.description}</strong>
+            </div>
+          </section>
+
+          <section className="protocol-map-grid">
+            <article className="panel protocol-map-card">
+              <span className="kicker">Passo 1</span>
+              <h3>{activeFrame.title}</h3>
+              <p>{activeFrame.description}</p>
+            </article>
+            <article className="panel protocol-map-card">
+              <span className="kicker">Passo 2</span>
+              <h3>{activeFrame.focus}</h3>
+              <p>Use a calculadora para organizar dose, fluxo, tubo, concentracao ou risco principal.</p>
+            </article>
+            <article className="panel protocol-map-card">
+              <span className="kicker">Passo 3</span>
+              <h3>{activeFrame.review}</h3>
+              <p>O numero nunca encerra a conduta. Ele prepara a proxima observacao e a proxima decisao.</p>
+            </article>
+          </section>
+
+          <section className="panel protocol-education-panel">
+            <div>
+              <span className="kicker">Leitura pedagogica</span>
+              <h3>{activeCalculator.name} dentro do fluxo</h3>
+              <p>
+                Esta variante prioriza contexto, linguagem mais clara e progressao de raciocinio.
+                Ela e melhor quando o app serve para estudar, treinar equipe ou revisar protocolo.
+              </p>
+            </div>
+            <div className="protocol-teaching-list">
+              <span>Reconhecer</span>
+              <strong>{activeFrame.title}</strong>
+              <span>Executar</span>
+              <strong>{activeFrame.focus}</strong>
+              <span>Reavaliar</span>
+              <strong>{activeFrame.review}</strong>
             </div>
           </section>
 
