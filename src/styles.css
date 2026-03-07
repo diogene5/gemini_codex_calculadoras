@@ -1116,3 +1116,95 @@ pre {
     display: none;
   }
 }
+
+.mobile-command-shell {
+  background:
+    radial-gradient(circle at top left, rgba(60, 137, 229, 0.18), transparent 22rem),
+    radial-gradient(circle at bottom right, rgba(15, 154, 114, 0.16), transparent 24rem),
+    linear-gradient(180deg, #f7fbff 0%, #eef3f6 100%);
+}
+
+.mobile-command-layout {
+  grid-template-columns: minmax(320px, 380px) minmax(0, 1fr);
+}
+
+.mobile-command-hero {
+  background: linear-gradient(145deg, #173d61 0%, #1f6aa5 55%, #2bb3a7 100%);
+}
+
+.mobile-search-field .input[type='search'] {
+  min-height: 3.25rem;
+}
+
+.mobile-filter-row,
+.mobile-context-row {
+  display: flex;
+  gap: 0.55rem;
+  overflow-x: auto;
+  padding-bottom: 0.15rem;
+}
+
+.mobile-filter-chip,
+.mobile-context-chip {
+  border: 1px solid rgba(18, 33, 42, 0.08);
+  border-radius: 999px;
+  min-height: 2.55rem;
+  padding: 0.65rem 0.95rem;
+  white-space: nowrap;
+  font-weight: 700;
+}
+
+.mobile-filter-chip {
+  background: rgba(255, 255, 255, 0.18);
+  color: white;
+}
+
+.mobile-filter-chip.active {
+  background: rgba(255, 255, 255, 0.96);
+  color: var(--ink);
+}
+
+.mobile-browser-panel,
+.mobile-command-header {
+  background: rgba(255, 255, 255, 0.94);
+}
+
+.mobile-browser-header {
+  display: grid;
+  gap: 0.8rem;
+}
+
+.mobile-result-list {
+  display: grid;
+  gap: 0.7rem;
+}
+
+.mobile-result-card .nav-card-copy p {
+  display: block;
+  color: var(--teal);
+  font-size: 0.82rem;
+  font-weight: 700;
+}
+
+.mobile-command-workspace {
+  gap: 1rem;
+}
+
+.mobile-command-header .workspace-chip {
+  background: linear-gradient(135deg, rgba(23, 61, 97, 0.94), rgba(43, 179, 167, 0.88));
+}
+
+.mobile-context-chip {
+  background: rgba(18, 33, 42, 0.04);
+}
+
+.mobile-context-chip.active {
+  background: var(--ink);
+  color: white;
+}
+
+@media (max-width: 1080px) {
+  .mobile-command-layout {
+    grid-template-columns: 1fr;
+  }
+}

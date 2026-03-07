@@ -36,8 +36,8 @@ import { PediatricVentilationCalculator } from './calculators/PediatricVentilati
 import { VasoactiveInfusionCalculator } from './calculators/VasoactiveInfusionCalculator';
 import { PwaInstallBanner } from './components/PwaInstallBanner';
 
-const ACTIVE_CALCULATOR_KEY = 'calc-ped-active-module';
-const LEARNING_MODULES_KEY = 'calc-ped-show-learning';
+const ACTIVE_CALCULATOR_KEY = 'calc-ped-active-module-mobile';
+const LEARNING_MODULES_KEY = 'calc-ped-show-learning-mobile';
 
 const calculators = [
   {
@@ -309,6 +309,8 @@ export default function App() {
 
     return localStorage.getItem(LEARNING_MODULES_KEY) === 'true';
   });
+  const [query, setQuery] = useState('');
+  const [sectionFilter, setSectionFilter] = useState('all');
 
   const activeCalculator =
     calculators.find((calculator) => calculator.id === activeCalculatorId) ??
@@ -322,21 +324,42 @@ export default function App() {
     () => calculators.filter((calculator) => calculator.learning),
     []
   );
-  const groupedCalculators = useMemo(
-    () =>
-      sectionOrder
-        .map((section) => ({
-          ...section,
-          calculators: calculators.filter(
-            (calculator) =>
-              calculator.section === section.id &&
-              (section.id !== 'learning' || showLearningTools)
-          ),
-        }))
-        .filter((section) => section.calculators.length > 0),
+  const quickLaunch = calculators.filter((calculator) => calculator.quick).slice(0, 5);
+  const sectionChips = useMemo(
+    () => [
+      { id: 'all', label: 'Todos' },
+      ...sectionOrder.filter((section) => showLearningTools || section.id !== 'learning'),
+    ],
     [showLearningTools]
   );
-  const quickLaunch = calculators.filter((calculator) => calculator.quick).slice(0, 5);
+  const visibleCalculators = useMemo(() => {
+    const normalizedQuery = query.trim().toLowerCase();
+
+    return calculators.filter((calculator) => {
+      if (!showLearningTools && calculator.learning) {
+        return false;
+      }
+
+      if (sectionFilter !== 'all' && calculator.section !== sectionFilter) {
+        return false;
+      }
+
+      if (!normalizedQuery) {
+        return true;
+      }
+
+      return [
+        calculator.name,
+        calculator.subtitle,
+        calculator.description,
+        calculator.badge,
+        calculator.category,
+      ]
+        .join(' ')
+        .toLowerCase()
+        .includes(normalizedQuery);
+    });
+  }, [query, sectionFilter, showLearningTools]);
 
   useEffect(() => {
     localStorage.setItem(ACTIVE_CALCULATOR_KEY, activeCalculatorId);
@@ -347,31 +370,42 @@ export default function App() {
   }, [showLearningTools]);
 
   return (
-    <div className="app-shell">
+    <div className="app-shell mobile-command-shell">
       <div className="ambient ambient-a" />
       <div className="ambient ambient-b" />
       <div className="ambient ambient-c" />
       <PwaInstallBanner />
 
-      <div className="layout">
-        <aside className="sidebar">
-          <section className="panel hero-card">
+      <div className="layout mobile-command-layout">
+        <aside className="sidebar mobile-command-sidebar">
+          <section className="panel hero-card mobile-command-hero">
             <div className="badge-row">
               <span className="badge badge-ghost">
                 <Sparkles size={14} />
-                Emergencia PED
+                Mobile-first
               </span>
               <span className="badge badge-ghost">
                 <FlaskConical size={14} />
-                PWA + offline
+                Busca + filtro
               </span>
             </div>
 
-            <h1>Calculadoras Pediatricas</h1>
+            <h1>Command Center</h1>
             <p>
-              Biblioteca de plantao pensada para celular, com foco em via aerea, choque,
-              ressuscitacao e numeros que precisam aparecer rapido.
+              Explora a hipótese de um app mais direto para bolso: busca rápida, filtros por
+              cenário e cards compactos para navegação com uma mão.
             </p>
+
+            <label className="field mobile-search-field">
+              <span>Buscar modulo</span>
+              <input
+                className="input"
+                type="search"
+                placeholder="Sepse, tubo, DKA, VNI..."
+                value={query}
+                onChange={(event) => setQuery(event.target.value)}
+              />
+            </label>
 
             <div className="hero-stats hero-stats-compact">
               <div>
@@ -384,79 +418,68 @@ export default function App() {
               </div>
             </div>
 
-            <div className="quick-strip">
-              {quickLaunch.map((calculator) => (
+            <div className="mobile-filter-row">
+              {sectionChips.map((section) => (
                 <button
-                  key={calculator.id}
+                  key={section.id}
                   type="button"
-                  className={`quick-chip ${calculator.id === activeCalculator.id ? 'active' : ''}`}
-                  onClick={() => setActiveCalculatorId(calculator.id)}
+                  className={`mobile-filter-chip ${sectionFilter === section.id ? 'active' : ''}`}
+                  onClick={() => setSectionFilter(section.id)}
                 >
-                  {calculator.name}
+                  {section.label}
                 </button>
               ))}
             </div>
           </section>
 
-          <section className="panel nav-panel">
-            <div className="section-heading">
-              <span className="kicker">Catalogo</span>
-              <h2>Acesso por cenario</h2>
+          <section className="panel nav-panel mobile-browser-panel">
+            <div className="mobile-browser-header">
+              <div className="section-heading">
+                <span className="kicker">Resultados</span>
+                <h2>{visibleCalculators.length} modulos</h2>
+              </div>
+              <button
+                type="button"
+                className="learning-toggle"
+                onClick={() => setShowLearningTools((current) => !current)}
+              >
+                {showLearningTools ? 'Ocultar aprendizado' : 'Mostrar aprendizado'}
+              </button>
             </div>
 
-            <button
-              type="button"
-              className="learning-toggle"
-              onClick={() => setShowLearningTools((current) => !current)}
-            >
-              {showLearningTools
-                ? 'Ocultar modulos de aprendizado'
-                : `Mostrar ${learningCalculators.length} modulos de aprendizado`}
-            </button>
+            <div className="mobile-result-list">
+              {visibleCalculators.map((calculator) => {
+                const Icon = calculator.icon;
+                const isActive = calculator.id === activeCalculator.id;
 
-            <div className="nav-group-list">
-              {groupedCalculators.map((section) => (
-                <section key={section.id} className="nav-section">
-                  <div className="nav-section-heading">
-                    <strong>{section.label}</strong>
-                    <span>{section.description}</span>
-                  </div>
+                return (
+                  <button
+                    key={calculator.id}
+                    type="button"
+                    className={`nav-card mobile-result-card ${isActive ? 'active' : ''}`}
+                    onClick={() => setActiveCalculatorId(calculator.id)}
+                  >
+                    <div className="nav-card-header">
+                      <div className="nav-card-icon">
+                        <Icon size={18} />
+                      </div>
+                      <span className="badge badge-soft">{calculator.badge}</span>
+                    </div>
 
-                  <div className="nav-list">
-                    {section.calculators.map((calculator) => {
-                      const Icon = calculator.icon;
-                      const isActive = calculator.id === activeCalculator.id;
-
-                      return (
-                        <button
-                          key={calculator.id}
-                          type="button"
-                          className={`nav-card ${isActive ? 'active' : ''}`}
-                          onClick={() => setActiveCalculatorId(calculator.id)}
-                        >
-                          <div className="nav-card-header">
-                            <div className="nav-card-icon">
-                              <Icon size={18} />
-                            </div>
-                            <span className="badge badge-soft">{calculator.badge}</span>
-                          </div>
-
-                          <div className="nav-card-copy">
-                            <strong>{calculator.name}</strong>
-                            <span>{calculator.subtitle}</span>
-                          </div>
-                        </button>
-                      );
-                    })}
-                  </div>
-                </section>
-              ))}
+                    <div className="nav-card-copy">
+                      <strong>{calculator.name}</strong>
+                      <span>{calculator.subtitle}</span>
+                      <p>{calculator.category}</p>
+                    </div>
+                  </button>
+                );
+              })}
             </div>
           </section>
         </aside>
 
-        <main className="workspace">
-          <section className="panel workspace-header">
+        <main className="workspace mobile-command-workspace">
+          <section className="panel workspace-header mobile-command-header">
             <div>
               <span className="kicker">{activeCalculator.category}</span>
               <h2>{activeCalculator.name}</h2>
@@ -466,6 +489,19 @@ export default function App() {
               <span>{activeCalculator.badge}</span>
               <strong>{activeCalculator.description}</strong>
             </div>
+          </section>
+
+          <section className="mobile-context-row">
+            {quickLaunch.map((calculator) => (
+              <button
+                key={calculator.id}
+                type="button"
+                className={`mobile-context-chip ${calculator.id === activeCalculator.id ? 'active' : ''}`}
+                onClick={() => setActiveCalculatorId(calculator.id)}
+              >
+                {calculator.name}
+              </button>
+            ))}
           </section>
 
           <ActiveCalculatorComponent />
